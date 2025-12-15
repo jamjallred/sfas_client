@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -62,6 +63,11 @@ func (cfg *Config) setFilePathForm(w fyne.Window) *widget.Form {
 	pathEntry := widget.NewEntry()
 	pathEntry.SetPlaceHolder("...")
 
+	saveAsEntry := widget.NewEntry()
+	now := time.Now()
+	d2dinventoryname := fmt.Sprintf("Avis On Rent Inv (NATIONWIDE) %v", now.Format("01-02-06"))
+	saveAsEntry.SetText(d2dinventoryname)
+
 	pickBtn := widget.NewButton("Choose file...", func() {
 		fd := dialog.NewFileOpen(func(r fyne.URIReadCloser, err error) {
 			if err != nil {
@@ -85,11 +91,12 @@ func (cfg *Config) setFilePathForm(w fyne.Window) *widget.Form {
 	form := &widget.Form{
 		Items: []*widget.FormItem{
 			widget.NewFormItem("File", pathEntry),
+			widget.NewFormItem("Save As", saveAsEntry),
 		},
 		OnSubmit: func() {
 			cfg.Log(fmt.Sprintf("Sending file (%v)...", pathEntry.Text))
 			log.Println("Sending file...", pathEntry.Text)
-			if err := sendSpreadsheetRequest(pathEntry.Text); err != nil {
+			if err := cfg.sendSpreadsheetRequest(pathEntry.Text, saveAsEntry.Text); err != nil {
 				log.Println("unable to generate spreadsheet:", err)
 			}
 		},
