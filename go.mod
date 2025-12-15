@@ -2,7 +2,10 @@ module github.com/jamjallred/sfas_client
 
 go 1.25.4
 
-require fyne.io/fyne/v2 v2.7.1
+require (
+	fyne.io/fyne/v2 v2.7.1
+	github.com/joho/godotenv v1.5.1
+)
 
 require (
 	fyne.io/systray v1.11.1-0.20250603113521-ca66a66d8b58 // indirect

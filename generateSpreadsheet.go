@@ -7,9 +7,14 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/joho/godotenv"
 )
 
 func (cfg *Config) sendSpreadsheetRequest(filepath, saveAs string) error {
+
+	godotenv.Load()
+
 	if _, err := os.Stat(filepath); err != nil {
 		return err
 	}
@@ -24,7 +29,7 @@ func (cfg *Config) sendSpreadsheetRequest(filepath, saveAs string) error {
 	}
 	defer f.Close()
 
-	url := "http://100.113.55.39:52431/api/create_sheet"
+	url := os.Getenv("WEB_ENDPOINT")
 	resp, err := http.Post(url, "application/octet-stream", f)
 	if err != nil {
 		return err
